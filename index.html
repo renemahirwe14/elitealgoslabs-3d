@@ -1,195 +1,154 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Elite Algos Labs — Enterprise Intelligence</title>
 <style>
-  :root{--bg:#05070d;--cyan:#22d3ee;--blue:#38bdf8;--mag:#e879f9;--ink:#e6f1ff;--dim:#7c8aa5;}
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
-  #scene{position:fixed;inset:0;z-index:0}
-  .wrap{position:relative;z-index:1}
-  section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8vw;max-width:1100px}
-  .hero h1{font-size:clamp(38px,7vw,84px);font-weight:800;line-height:1.02;letter-spacing:-1px;
-    background:linear-gradient(90deg,#eafcff,#7dd3fc 55%,#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero .kicker{font-family:monospace;color:var(--cyan);letter-spacing:3px;font-size:13px;margin-bottom:18px;opacity:.85}
-  .hero p{margin-top:22px;font-size:clamp(16px,2vw,20px);color:var(--dim);max-width:620px;line-height:1.6}
-  .cta{margin-top:38px;display:inline-flex;gap:14px}
-  .btn{padding:14px 26px;border-radius:40px;font-weight:700;text-decoration:none;font-size:15px;transition:.25s}
-  .btn.primary{background:linear-gradient(90deg,var(--cyan),var(--blue));color:#04121a;box-shadow:0 0 40px rgba(56,189,248,.35)}
-  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(56,189,248,.55)}
-  .btn.ghost{border:1px solid rgba(125,211,252,.35);color:#bae6fd}
-  .reveal{opacity:0;transform:translateY(40px);transition:.9s cubic-bezier(.2,.7,.2,1)}
-  .reveal.in{opacity:1;transform:none}
-  .eyebrow{font-family:monospace;color:var(--mag);letter-spacing:2px;font-size:12px;margin-bottom:14px}
-  h2{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.5px;margin-bottom:10px}
-  .lead{color:var(--dim);font-size:18px;max-width:640px;line-height:1.6}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:40px;width:100%}
-  .card{background:rgba(18,28,48,.5);backdrop-filter:blur(8px);border:1px solid rgba(125,211,252,.12);
-    border-radius:18px;padding:26px;transition:.3s}
-  .card:hover{border-color:rgba(34,211,238,.5);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
-  .card .n{font-family:monospace;color:var(--cyan);font-size:13px}
-  .card h3{margin:10px 0 8px;font-size:20px}
-  .card p{color:var(--dim);font-size:14.5px;line-height:1.55}
-  .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d399;margin-right:8px;animation:pulse 1.6s infinite}
-  @keyframes pulse{50%{opacity:.35}}
-  footer{padding:8vw;color:var(--dim);font-family:monospace;font-size:13px;position:relative;z-index:1}
-</style>
-</head>
-<body>
-<canvas id="scene"></canvas>
+:root{--bg:#04060c;--cyan:#22d3ee;--blue:#38bdf8;--mag:#e879f9;--ink:#e9f2ff;--dim:#7c8aa5}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden}
+#scene{position:fixed;inset:0;z-index:0}
+.overlay{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 800px at 70% 20%,rgba(34,211,238,.07),transparent 60%),radial-gradient(900px 700px at 20% 80%,rgba(232,121,249,.06),transparent 60%)}
+nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 6vw;backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(4,6,12,.7),transparent)}
+.logo{font-weight:800;letter-spacing:.5px;font-size:18px;display:flex;align-items:center;gap:10px}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);animation:pulse 1.8s infinite}
+nav .links{display:flex;gap:26px;font-size:14px}
+nav a{color:var(--dim);text-decoration:none;transition:.2s}nav a:hover{color:var(--ink)}
+@keyframes pulse{50%{opacity:.4}}
+.wrap{position:relative;z-index:1}
+section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:14vh 6vw;max-width:1160px}
+.kicker{font-family:monospace;color:var(--cyan);letter-spacing:3px;font-size:12px;margin-bottom:16px;opacity:.9}
+.eyebrow{font-family:monospace;color:var(--mag);letter-spacing:2px;font-size:12px;margin-bottom:14px}
+h1{font-size:clamp(40px,7.5vw,92px);font-weight:800;line-height:1.0;letter-spacing:-1.5px;background:linear-gradient(100deg,#f2fdff,#7dd3fc 50%,#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(30px,4.5vw,54px);font-weight:800;letter-spacing:-.5px;margin-bottom:12px}
+.lead{color:var(--dim);font-size:clamp(16px,2vw,20px);max-width:660px;line-height:1.6}
+.cta{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:15px 28px;border-radius:40px;font-weight:700;text-decoration:none;font-size:15px;transition:.25s}
+.btn.primary{background:linear-gradient(90deg,var(--cyan),var(--blue));color:#04121a;box-shadow:0 0 40px rgba(56,189,248,.35)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 0 66px rgba(56,189,248,.6)}
+.btn.ghost{border:1px solid rgba(125,211,252,.35);color:#bae6fd}.btn.ghost:hover{background:rgba(56,189,248,.08)}
+.reveal{opacity:0;transform:translateY(46px);transition:1s cubic-bezier(.2,.7,.2,1)}.reveal.in{opacity:1;transform:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:42px;width:100%}
+.card{background:rgba(16,26,46,.45);backdrop-filter:blur(10px);border:1px solid rgba(125,211,252,.12);border-radius:20px;padding:28px;transition:.3s}
+.card:hover{border-color:rgba(34,211,238,.55);transform:translateY(-5px);box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.card .n{font-family:monospace;color:var(--cyan);font-size:13px}
+.card h3{margin:12px 0 8px;font-size:21px}.card p{color:var(--dim);font-size:14.5px;line-height:1.55}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d399;margin-right:7px;animation:pulse 1.6s infinite}
+.stats{display:flex;gap:48px;margin-top:44px;flex-wrap:wrap}
+.stat .big{font-size:44px;font-weight:800;background:linear-gradient(90deg,#7dd3fc,#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .sm{color:var(--dim);font-size:13px;font-family:monospace}
+.steps{margin-top:40px;display:grid;gap:2px;border-left:2px solid rgba(56,189,248,.25);padding-left:26px}
+.step{padding:18px 0}.step h3{font-size:20px}.step p{color:var(--dim);margin-top:4px;font-size:15px}
+footer{padding:8vh 6vw;color:var(--dim);font-family:monospace;font-size:13px;position:relative;z-index:1;border-top:1px solid rgba(125,211,252,.1)}
+.scrollhint{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:5;color:var(--dim);font-family:monospace;font-size:11px;letter-spacing:2px;animation:pulse 2s infinite}
+</style></head><body>
+<canvas id="scene"></canvas><div class="overlay"></div>
+<nav>
+  <div class="logo"><span class="dot"></span>ELITE ALGOS LABS</div>
+  <div class="links"><a href="#capabilities">Capabilities</a><a href="#work">Work</a><a href="#process">Process</a><a href="#contact">Contact</a></div>
+</nav>
 <div class="wrap">
-  <section class="hero">
-    <div class="kicker">ELITE ALGOS LABS</div>
-    <h1>Enterprise intelligence,<br/>engineered.</h1>
-    <p>We build the algorithms and systems that run quietly behind real institutions — deployed, live, and working. Move your cursor. It's listening.</p>
-    <div class="cta">
-      <a class="btn primary" href="#work">See what we've shipped</a>
-      <a class="btn ghost" href="#contact">Start a conversation</a>
-    </div>
+  <section id="home">
+    <div class="kicker">ENTERPRISE INTELLIGENCE · MADE IN RWANDA</div>
+    <h1>We build the<br/>algorithms that run<br/>the real world.</h1>
+    <p class="lead">Systems, platforms and intelligence — engineered, deployed, and live in production. Move your cursor. It responds. This is what we do to everything we touch.</p>
+    <div class="cta"><a class="btn primary" href="#work">See what we've shipped</a><a class="btn ghost" href="#contact">Start a conversation</a></div>
   </section>
 
-  <section>
-    <div class="reveal">
-      <div class="eyebrow">WHAT WE DO</div>
-      <h2>Systems that think.</h2>
-      <p class="lead">Not slideware. Software that goes into production and stays there.</p>
-      <div class="cards">
-        <div class="card"><div class="n">01</div><h3>Custom platforms</h3><p>Full web systems — registration, licensing, records — built and deployed end to end.</p></div>
-        <div class="card"><div class="n">02</div><h3>Algorithmic engines</h3><p>Automated decision and trading logic, engineered, tested, and risk-controlled.</p></div>
-        <div class="card"><div class="n">03</div><h3>Intelligence layers</h3><p>AI woven into real workflows, running 24/7 on infrastructure you own.</p></div>
-      </div>
+  <section id="capabilities"><div class="reveal">
+    <div class="eyebrow">CAPABILITIES</div><h2>Software that thinks.</h2>
+    <p class="lead">Not slideware — production systems that go live and stay live.</p>
+    <div class="cards">
+      <div class="card"><div class="n">01</div><h3>Custom platforms</h3><p>End-to-end web systems: registration, licensing, records — designed, built and deployed on infrastructure you own.</p></div>
+      <div class="card"><div class="n">02</div><h3>Algorithmic engines</h3><p>Automated decision & trading logic — engineered, back-tested, and risk-controlled, not guessed.</p></div>
+      <div class="card"><div class="n">03</div><h3>Intelligence layers</h3><p>AI woven into real workflows, running 24/7, quietly making the hard calls.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <section id="work">
-    <div class="reveal">
-      <div class="eyebrow">PROOF — LIVE IN PRODUCTION</div>
-      <h2>Already running.</h2>
-      <div class="cards">
-        <div class="card"><div class="n"><span class="live"></span>LIVE</div><h3>CEPGL</h3><p>Citizen registration platform. Deployed, secured, serving real users.</p></div>
-        <div class="card"><div class="n"><span class="live"></span>LIVE</div><h3>Permis de Conduire</h3><p>Driving-licence issuance & verification system, in production.</p></div>
-        <div class="card"><div class="n">SOON</div><h3>Your project</h3><p>The next system that just works — built with you.</p></div>
-      </div>
+  <section id="work"><div class="reveal">
+    <div class="eyebrow">PROOF · LIVE IN PRODUCTION</div><h2>Already running.</h2>
+    <p class="lead">The truest portfolio is the one you can log into right now.</p>
+    <div class="cards">
+      <div class="card"><div class="n"><span class="live"></span>LIVE</div><h3>CEPGL</h3><p>Citizen registration platform — deployed, secured, serving real users daily.</p></div>
+      <div class="card"><div class="n"><span class="live"></span>LIVE</div><h3>Permis de Conduire</h3><p>Driving-licence issuance & verification system, in production.</p></div>
+      <div class="card"><div class="n">NEXT</div><h3>Your system</h3><p>The one everyone said was too complex. Let's make it live.</p></div>
     </div>
-  </section>
+    <div class="stats">
+      <div class="stat"><div class="big">2+</div><div class="sm">SYSTEMS LIVE</div></div>
+      <div class="stat"><div class="big">24/7</div><div class="sm">UPTIME, SELF-OWNED</div></div>
+      <div class="stat"><div class="big">100%</div><div class="sm">BUILT IN-HOUSE</div></div>
+    </div>
+  </div></section>
 
-  <section id="contact">
-    <div class="reveal">
-      <div class="eyebrow">LET'S BUILD</div>
-      <h2>Bring us the hard one.</h2>
-      <p class="lead">The problem everyone else said was too complex. That's the one we like.</p>
-      <div class="cta"><a class="btn primary" href="mailto:founder@elitealgoslabs.com">founder@elitealgoslabs.com</a></div>
+  <section id="process"><div class="reveal">
+    <div class="eyebrow">HOW WE WORK</div><h2>From idea to live — fast.</h2>
+    <div class="steps">
+      <div class="step"><h3>01 · Understand</h3><p>We sit with the real problem until we can explain it back to you better than you can.</p></div>
+      <div class="step"><h3>02 · Engineer</h3><p>We build it properly — tested, secured, and yours.</p></div>
+      <div class="step"><h3>03 · Deploy</h3><p>It goes live on your own infrastructure. No gatekeepers, no lock-in.</p></div>
+      <div class="step"><h3>04 · Evolve</h3><p>It keeps getting smarter, quietly, in the background.</p></div>
     </div>
-  </section>
+  </div></section>
+
+  <section id="contact"><div class="reveal">
+    <div class="eyebrow">LET'S BUILD</div><h2>Bring us the hard one.</h2>
+    <p class="lead">The problem everyone else called impossible. That's the one we like.</p>
+    <div class="cta"><a class="btn primary" href="mailto:founder@elitealgoslabs.com">founder@elitealgoslabs.com</a></div>
+  </div></section>
 </div>
-<footer>© Elite Algos Labs · Made in Rwanda · built by Rene MAHIRWE</footer>
+<footer>© Elite Algos Labs · Enterprise Intelligence · Made in Rwanda by Rene MAHIRWE</footer>
+<div class="scrollhint">SCROLL — IT'S ALIVE</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const cvs=document.getElementById('scene');
 const renderer=new THREE.WebGLRenderer({canvas:cvs,antialias:true,alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,100);
-camera.position.z=14;
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,120);camera.position.z=15;
+const group=new THREE.Group();scene.add(group);
 
-// ---- Living network of nodes ----
-const N=150, R=7;
-const base=[], pos=new Float32Array(N*3), home=[];
-for(let i=0;i<N;i++){
-  // fibonacci sphere for even, organic spread
-  const y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), t=i*2.399963;
-  const p=new THREE.Vector3(Math.cos(t)*r, y, Math.sin(t)*r).multiplyScalar(R*(0.75+Math.random()*0.35));
-  home.push(p.clone()); base.push(p.clone());
-  pos[i*3]=p.x;pos[i*3+1]=p.y;pos[i*3+2]=p.z;
-}
-const nGeo=new THREE.BufferGeometry();
-nGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-const nMat=new THREE.PointsMaterial({color:0x22d3ee,size:0.16,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false});
-const nodes=new THREE.Points(nGeo,nMat); scene.add(nodes);
-
-// ---- Dynamic connection lines ----
-const maxSeg=N*6;
-const lPos=new Float32Array(maxSeg*6);
-const lGeo=new THREE.BufferGeometry();
+// living network
+const N=170,R=7,home=[],cur=[],pos=new Float32Array(N*3);
+for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=i*2.399963;
+  const p=new THREE.Vector3(Math.cos(t)*r,y,Math.sin(t)*r).multiplyScalar(R*(0.72+Math.random()*0.4));
+  home.push(p.clone());cur.push(p.clone());pos[i*3]=p.x;pos[i*3+1]=p.y;pos[i*3+2]=p.z;}
+const nGeo=new THREE.BufferGeometry();nGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+const nodes=new THREE.Points(nGeo,new THREE.PointsMaterial({color:0x22d3ee,size:0.17,transparent:true,opacity:.95,blending:THREE.AdditiveBlending,depthWrite:false}));group.add(nodes);
+const maxSeg=N*6,lPos=new Float32Array(maxSeg*6),lGeo=new THREE.BufferGeometry();
 lGeo.setAttribute('position',new THREE.BufferAttribute(lPos,3));
-const lMat=new THREE.LineBasicMaterial({color:0x2a6fd6,transparent:true,opacity:0.28,blending:THREE.AdditiveBlending});
-const lines=new THREE.LineSegments(lGeo,lMat); scene.add(lines);
+const lines=new THREE.LineSegments(lGeo,new THREE.LineBasicMaterial({color:0x2f7fe0,transparent:true,opacity:.30,blending:THREE.AdditiveBlending}));group.add(lines);
+// dust
+const D=1400,dPos=new Float32Array(D*3);for(let i=0;i<D;i++){dPos[i*3]=(Math.random()-.5)*46;dPos[i*3+1]=(Math.random()-.5)*30;dPos[i*3+2]=(Math.random()-.5)*34;}
+const dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
+const dust=new THREE.Points(dGeo,new THREE.PointsMaterial({color:0x8fb0ff,size:0.05,transparent:true,opacity:.5,depthWrite:false}));scene.add(dust);
 
-// ---- Ambient dust for depth ----
-const D=1200, dPos=new Float32Array(D*3);
-for(let i=0;i<D;i++){dPos[i*3]=(Math.random()-.5)*40;dPos[i*3+1]=(Math.random()-.5)*26;dPos[i*3+2]=(Math.random()-.5)*30;}
-const dGeo=new THREE.BufferGeometry(); dGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
-const dust=new THREE.Points(dGeo,new THREE.PointsMaterial({color:0x88a8ff,size:0.05,transparent:true,opacity:0.5,depthWrite:false}));
-scene.add(dust);
-
-const group=new THREE.Group(); scene.add(group); group.add(nodes); group.add(lines);
-
-// ---- Interaction ----
-const mouse=new THREE.Vector2(0,0), target=new THREE.Vector2(0,0);
-addEventListener('mousemove',e=>{target.x=(e.clientX/innerWidth-.5);target.y=(e.clientY/innerHeight-.5);});
-addEventListener('touchmove',e=>{if(e.touches[0]){target.x=(e.touches[0].clientX/innerWidth-.5);target.y=(e.touches[0].clientY/innerHeight-.5);}},{passive:true});
-let scrollY=0; addEventListener('scroll',()=>scrollY=window.scrollY/innerHeight);
-
+const mouse=new THREE.Vector2(),target=new THREE.Vector2();
+addEventListener('mousemove',e=>{target.x=e.clientX/innerWidth-.5;target.y=e.clientY/innerHeight-.5});
+addEventListener('touchmove',e=>{if(e.touches[0]){target.x=e.touches[0].clientX/innerWidth-.5;target.y=e.touches[0].clientY/innerHeight-.5}},{passive:true});
+let sp=0;const maxScroll=()=>document.body.scrollHeight-innerHeight;
+addEventListener('scroll',()=>sp=Math.min(1,window.scrollY/Math.max(1,maxScroll())));
 const clock=new THREE.Clock();
-function animate(){
-  const t=clock.getElapsedTime();
-  mouse.x+=(target.x-mouse.x)*0.05; mouse.y+=(target.y-mouse.y)*0.05;
-  // camera parallax = "it knows you're there"
-  camera.position.x+=(mouse.x*6-camera.position.x)*0.04;
-  camera.position.y+=(-mouse.y*4-camera.position.y)*0.04;
+function animate(){const t=clock.getElapsedTime();
+  mouse.x+=(target.x-mouse.x)*.05;mouse.y+=(target.y-mouse.y)*.05;
+  camera.position.x+=(mouse.x*6-camera.position.x)*.04;
+  camera.position.y+=(-mouse.y*4-camera.position.y)*.04;
+  camera.position.z+=((15-sp*4)-camera.position.z)*.03; // dive in on scroll
   camera.lookAt(0,0,0);
-
-  // slow living rotation + scroll morph
-  group.rotation.y=t*0.06 + scrollY*0.6;
-  group.rotation.x=Math.sin(t*0.15)*0.15 + scrollY*0.2;
-  dust.rotation.y=t*0.01;
-
-  // breathing + organic drift + mouse repulsion
-  const mp=new THREE.Vector3(mouse.x*10,-mouse.y*8,0);
+  group.rotation.y=t*.05+sp*1.4;group.rotation.x=Math.sin(t*.12)*.14+sp*.5;dust.rotation.y=t*.008;
+  // morph: sphere -> flatter "grid" as you scroll
+  const flat=sp; const mp=new THREE.Vector3(mouse.x*10,-mouse.y*8,0);
   const p=nGeo.attributes.position.array;
-  for(let i=0;i<N;i++){
-    const h=home[i];
-    const breathe=1+Math.sin(t*0.8+i)*0.05;
-    let x=h.x*breathe + Math.sin(t*0.5+i*1.3)*0.15;
-    let y=h.y*breathe + Math.cos(t*0.4+i*1.1)*0.15;
-    let z=h.z*breathe;
-    // repel from cursor (in local-ish space)
-    const dx=x-mp.x, dy=y-mp.y, dd=dx*dx+dy*dy;
-    if(dd<9){const f=(9-dd)/9*0.9; x+=dx*f*0.15; y+=dy*f*0.15;}
-    p[i*3]=x;p[i*3+1]=y;p[i*3+2]=z;
-    base[i].set(x,y,z);
-  }
+  for(let i=0;i<N;i++){const h=home[i];const br=1+Math.sin(t*.8+i)*.05;
+    let x=h.x*br+Math.sin(t*.5+i*1.3)*.16, y=h.y*br*(1-flat*.5)+Math.cos(t*.4+i*1.1)*.16, z=h.z*br*(1+flat*.4);
+    const dx=x-mp.x,dy=y-mp.y,dd=dx*dx+dy*dy;if(dd<9){const f=(9-dd)/9*.9;x+=dx*f*.15;y+=dy*f*.15;}
+    p[i*3]=x;p[i*3+1]=y;p[i*3+2]=z;cur[i].set(x,y,z);}
   nGeo.attributes.position.needsUpdate=true;
-
-  // rebuild links
-  let s=0; const TH=2.6;
-  for(let i=0;i<N && s<maxSeg;i++){
-    for(let j=i+1;j<N && s<maxSeg;j++){
-      const a=base[i],b=base[j];
-      const d=a.distanceTo(b);
-      if(d<TH){
-        lPos[s*6]=a.x;lPos[s*6+1]=a.y;lPos[s*6+2]=a.z;
-        lPos[s*6+3]=b.x;lPos[s*6+4]=b.y;lPos[s*6+5]=b.z;s++;
-      }
-    }
-  }
-  for(let k=s;k<maxSeg;k++){for(let m=0;m<6;m++)lPos[k*6+m]=0;}
-  lGeo.attributes.position.needsUpdate=true;
-  lGeo.setDrawRange(0,s*2);
-
-  renderer.render(scene,camera);
-  requestAnimationFrame(animate);
-}
+  let s=0,TH=2.7;for(let i=0;i<N&&s<maxSeg;i++)for(let j=i+1;j<N&&s<maxSeg;j++){const a=cur[i],b=cur[j];if(a.distanceTo(b)<TH){lPos[s*6]=a.x;lPos[s*6+1]=a.y;lPos[s*6+2]=a.z;lPos[s*6+3]=b.x;lPos[s*6+4]=b.y;lPos[s*6+5]=b.z;s++;}}
+  lGeo.attributes.position.needsUpdate=true;lGeo.setDrawRange(0,s*2);
+  renderer.render(scene,camera);requestAnimationFrame(animate);}
 animate();
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
-
-// scroll reveals
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0.25});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.2});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
-</body>
-</html>
+addEventListener('scroll',()=>{if(window.scrollY>120)document.querySelector('.scrollhint').style.opacity=0;},{passive:true});
+</script></body></html>
